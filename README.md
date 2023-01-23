@@ -2,7 +2,7 @@
 ## Przykładowe użycie
 Do uruchomienia wystarczy użyć
 ```
-   python parser.py 
+   python main.py 
 ```
 
 A następnie podać wymagane dane:
