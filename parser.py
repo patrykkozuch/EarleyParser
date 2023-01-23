@@ -120,7 +120,7 @@ class Parser:
                 q[i].append(new_state)
 
     def is_finished(self, q):
-        return State('S\'', self.G.start, len(self.G.start), 0, len(q)-1) in q[-1]
+        return "Należy do gramatyki" if State('S\'', self.G.start, len(self.G.start), 0, len(q)-1) in q[-1] else "Nie należy do gramatyki"
 
 
 if __name__ == '__main__':
