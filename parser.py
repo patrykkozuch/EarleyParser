@@ -30,16 +30,17 @@ class State:
     pos: int
     l: str
     r: str
-    finished = False
+    i: int
 
-    def __init__(self, l, r, pos, h):
+    def __init__(self, l, r, pos, h, i):
         self.l = l
         self.r = r
         self.pos = pos
         self.h = h
+        self.i = i
 
     def __str__(self):
-        return f"{self.l} -> {self.r[:self.pos]}*{self.r[self.pos:]} [{self.h}]"
+        return f"{self.l} -> {self.r[:self.pos]}*{self.r[self.pos:]} [{self.h}, {self.i}]"
 
     def __repr__(self):
         return self.__str__()
@@ -58,7 +59,7 @@ class Parser:
         q:list[list[State]] = [[] for _ in range(len(word)+1)]
         G.productions.append(('S\'', G.start))
 
-        q[0].append(State('S\'', G.start, 0, 0))
+        q[0].append(State('S\'', G.start, 0, 0, 0))
         i = 0
         while i < len(word):
             j = 0
@@ -97,14 +98,14 @@ class Parser:
 
     def predict(self, state, ch, q, i):
         for prod in [prod for prod in self.G.productions if prod[0] == ch]:
-            new_state = State(prod[0], prod[1], 0, i)
+            new_state = State(prod[0], prod[1], 0, i, i)
 
             if new_state not in q[i]:
                 print(f"Przewidywanie: {new_state}")
                 q[i].append(new_state)
 
     def scan(self, state, ch, q, i):
-        new_state = State(state.l, state.r, state.pos + 1, state.h)
+        new_state = State(state.l, state.r, state.pos + 1, state.h, i + 1)
 
         if new_state not in q[i+1]:
             print(f"Wczytywanie, {new_state}")
@@ -112,14 +113,14 @@ class Parser:
 
     def complete(self, state, q, i):
         for s in [s for s in q[state.h] if s.pos != len(s.r) and self.read_character(s.r, s.pos)[0] == state.l]:
-            new_state = State(s.l, s.r, s.pos + 1, s.h)
+            new_state = State(s.l, s.r, s.pos + 1, s.h, i)
 
             if new_state not in q[i]:
                 print(f"Uzupełnianie {new_state}")
                 q[i].append(new_state)
 
     def is_finished(self, q):
-        return State('S\'', self.G.start, len(self.G.start), 0) in q[-1]
+        return State('S\'', self.G.start, len(self.G.start), 0, len(q)-1) in q[-1]
 
 
 if __name__ == '__main__':
