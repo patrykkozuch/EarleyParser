@@ -13,7 +13,7 @@ class State:
         self.i = i
 
     def __str__(self):
-        return f"{self.l} -> {self.r[:self.pos]}*{self.r[self.pos:]} [{self.h}, {self.i}]"
+        return f"{self.l} -> {self.r[:self.pos]}\u2022{self.r[self.pos:]} [{self.h}, {self.i}]"
 
     def __repr__(self):
         return self.__str__()
