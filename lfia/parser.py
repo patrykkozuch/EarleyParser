@@ -15,9 +15,10 @@ class Parser:
 
         initial = State('S\'', self.G.start, 0, 0, 0)
         q[0].append(initial)
-
+        print()
         print(f"Sytuacja początkowa: {initial}")
         i = 0
+        scan_output = ""
         while i < len(word):
             j = 0
             while j < len(q[i]):
@@ -27,7 +28,7 @@ class Parser:
                     ch, k, type = self.read_character(state.r, state.pos)
 
                     if type == Grammar.CHAR_TYPE.TERMINAL and ch == word[i]:
-                        self.scan(state, ch, q, i)
+                        scan_output = self.scan(state, ch, q, i)
                     elif type == Grammar.CHAR_TYPE.NON_TERMINAL:
                         self.predict(state, ch, q, i)
                 else:
@@ -36,6 +37,7 @@ class Parser:
                 j += 1
             i += 1
             print(f"i = {i}")
+            print(scan_output)
         for state in q[-1]:
             if state.pos == len(state.r):
                 self.complete(state, q, len(word))
@@ -65,8 +67,9 @@ class Parser:
         new_state = State(state.l, state.r, state.pos + 1, state.h, i + 1)
 
         if new_state not in q[i + 1]:
-            print(f"Wczytywanie, {new_state}")
+            to_print = f"Wczytywanie, {new_state}"
             q[i + 1].append(new_state)
+            return to_print
 
     def complete(self, state, q, i):
         for s in [s for s in q[state.h] if s.pos != len(s.r) and self.read_character(s.r, s.pos)[0] == state.l]:
