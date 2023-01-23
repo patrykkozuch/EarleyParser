@@ -13,7 +13,10 @@ class Parser:
         q: list[list[State]] = [[] for _ in range(len(word) + 1)]
         self.G.productions.append(('S\'', self.G.start))
 
-        q[0].append(State('S\'', self.G.start, 0, 0, 0))
+        initial = State('S\'', self.G.start, 0, 0, 0)
+        q[0].append(initial)
+
+        print(f"Sytuacja początkowa: {initial}")
         i = 0
         while i < len(word):
             j = 0
